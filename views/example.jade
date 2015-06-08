@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= title
+  div.top
+    form.form-horizontal(method="post", id="loginForm")
+      label Username
+      input.span3(id="username", type="text", name="User", placeholder="Enter your username")
+      label Password
+      input.span3(id="password", type="password", name="Password")
+      input.btn(type="submit", value="Log In")
+  div.container
+    div.content
+      table.table.table-striped
+        thead
+          tr
+            th Titre
+            th Année
+            th Genre
+            th Spectateurs
+            th Presse
+        tbody
+         each film in films
+          tr
+           td #{film.titre}
+           td #{film.annee}
+           td #{film.genre}
+           td #{film.noteSpec}
+           td #{film.notePress}
+ 
+  div.footer

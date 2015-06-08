@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  div.top
+   h1= title
+  div.container
+    div.content
+      table.table.table-striped
+        thead
+          tr
+            th Poster
+            th Titre
+            th Année
+            th Genre
+            th Spectateurs
+            th Presse
+        tbody
+         each film in films
+          tr
+           td
+            img(src="#{film.img}")
+           td !{film.titre}
+           td #{film.annee}
+           td #{film.genre}
+           td #{film.noteSpec}
+           td #{film.notePress}
+ 
+  div.footer
