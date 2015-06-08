@@ -1,8 +1,6 @@
 var fs = require('fs');
 var http = require('http');
 var rep = "/home/jerom/Projets/MyScraper/Films/";
-//var rep = "J:/Films/VO/";
-//var mesFilms = new Array();
 
 var pendingGet = 0;
 var loading = false;
@@ -17,6 +15,9 @@ myTitleCallback = function(filename) {
     var str = '';
     response.on('data', function (chunk) {
       str += chunk;
+    });
+    response.on('error', function(err){
+      console.log("Error Occurred: "+err.message);
     });
     response.on('end', function () {
       // Poster
@@ -45,15 +46,20 @@ myTitleCallback = function(filename) {
 mySearchTitleCallback = function(filename) {
     return function(response) {
     var str = '';
+    response.on('error', function(err){
+      console.log("Error Occurred: "+err.message);
+    });
     response.on('data', function (chunk) {
       str += chunk;
     });
     response.on('end', function () {
-	var iH1 = str.indexOf("<h1>");
-	var iUrl = str.indexOf("a href='/film/", iH1);
-	url = str.substring(iUrl+8, str.indexOf('>', iUrl)-1);
-	console.log(filename + " : " + url);
-	http.request({host: 'www.allocine.fr', path: url}, myTitleCallback(filename)).end();
+	 var iH1 = str.indexOf("<h1>");
+	 var iUrl = str.indexOf("a href='/film/", iH1);
+	 url = str.substring(iUrl+8, str.indexOf('>', iUrl)-1);
+	 console.log(filename + " : " + url);
+   if (url.indexOf('/film')=== 0) {
+	   http.request({host: 'www.allocine.fr', path: url}, myTitleCallback(filename)).end();
+    }
     });
   }
 }
@@ -65,8 +71,9 @@ fs.readdir(rep, function (err, files) {
        if (!err && stats.isDirectory()) {
         console.log("--> "+file);
        }
-       else{
+       else{        
         options.path = '/recherche/?q='+file.replace(/(\s+)?.?.?.?.$/, '').replace(/[^a-z0-9()\s]/gi, ' ').replace(/ /g,'+');
+        console.log(options.path);
         http.request(options, mySearchTitleCallback(file)).end();
 	       loading = true;
 	       pendingGet++;
