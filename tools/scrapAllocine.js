@@ -59,6 +59,8 @@ mySearchTitleCallback = function(filename) {
 	 console.log(filename + " : " + url);
    if (url.indexOf('/film')=== 0) {
 	   http.request({host: 'www.allocine.fr', path: url}, myTitleCallback(filename)).end();
+    } else {
+      pendingGet--;
     }
     });
   }
